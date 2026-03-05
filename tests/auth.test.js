@@ -1,5 +1,10 @@
 import request from "supertest";
 import app from "../src/app.js";
+import connectDB from "../src/config/db.js";
+
+beforeAll(async () => {
+  await connectDB();
+});
 
 describe("Auth Routes", () => {
 

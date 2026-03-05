@@ -1,10 +1,13 @@
 import request from "supertest";
 import app from "../src/app.js";
+import connectDB from "../src/config/db.js";
 
 let token;
 let taskId;
 
 beforeAll(async () => {
+  await connectDB();
+
   // Register
   await request(app)
     .post("/api/auth/register")
