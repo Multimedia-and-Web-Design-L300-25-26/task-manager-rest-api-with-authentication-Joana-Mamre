@@ -1,12 +1,18 @@
 import request from "supertest";
 import app from "../src/app.js";
 import connectDB from "../src/config/db.js";
+import mongoose from "mongoose";
+import User from "../src/models/User.js";
+import Task from "../src/models/Task.js";
 
 let token;
 let taskId;
 
 beforeAll(async () => {
   await connectDB();
+  // clear users and tasks to avoid conflicts
+  await User.deleteMany({});
+  await Task.deleteMany({});
 
   // Register
   await request(app)
@@ -26,6 +32,12 @@ beforeAll(async () => {
     });
 
   token = res.body.token;
+});
+
+afterAll(async () => {
+  // drop test database and close connection
+  await mongoose.connection.dropDatabase();
+  await mongoose.connection.close();
 });
 
 describe("Task Routes", () => {
