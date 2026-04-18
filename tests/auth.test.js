@@ -1,5 +1,20 @@
 import request from "supertest";
 import app from "../src/app.js";
+import connectDB from "../src/config/db.js";
+import mongoose from "mongoose";
+import User from "../src/models/User.js";
+
+beforeAll(async () => {
+  await connectDB();
+  // ensure a clean slate for auth tests
+  await User.deleteMany({});
+});
+
+afterAll(async () => {
+  // clean up and close connection to avoid open handles
+  await mongoose.connection.dropDatabase();
+  await mongoose.connection.close();
+});
 
 describe("Auth Routes", () => {
 
